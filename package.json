@@ -1,0 +1,9 @@
+{
+  "name": "the-build-1m-challenge",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@netlify/database": "*",
+    "@netlify/functions": "*"
+  }
+}

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero to a Mil — The Innersource Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF9F5;
+    --bg-soft:#ECEBE6;
+    --card:#FFFFFF;
+    --ink:#2B2724;
+    --ink-dim:#8B8579;
+    --blue:#A9C1DC;
+    --blue-deep:#7E9BC4;
+    --sage:#C7D9A6;
+    --lavender:#C3C4CF;
+    --line:#E2E0D8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'Manrope', sans-serif; font-weight:800;}
+  .serif{font-family:'Manrope', sans-serif;}
+  a{color:inherit;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px;}
+
+  .perf{
+    height:4px;
+    background:linear-gradient(90deg, var(--blue), var(--sage), var(--lavender));
+    border-radius:4px;
+    opacity:.55;
+  }
+
+  /* NAV */
+  nav{padding:20px 0; background:var(--bg);}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .stamp{
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:12px; letter-spacing:.04em;
+    background:linear-gradient(135deg, var(--blue), var(--sage));
+    color:#fff;
+    padding:8px 14px;
+    border-radius:999px;
+    box-shadow:0 4px 14px rgba(126,155,196,.30);
+  }
+  .nav-link{font-size:14px; font-weight:700; color:var(--blue-deep); text-decoration:none;}
+
+  /* HERO */
+  .hero{padding:64px 0 44px;}
+  .eyebrow{
+    font-family:'Manrope', sans-serif;
+    font-size:13px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--blue-deep); margin-bottom:16px; display:flex; align-items:center; gap:10px;
+    font-weight:600;
+  }
+  .eyebrow::before{content:'✦'; color:var(--blue-deep); font-size:14px;}
+  h1{
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:clamp(32px, 6vw, 56px);
+    line-height:1.08;
+    letter-spacing:-.02em;
+    max-width:15ch;
+    color:var(--ink);
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg, var(--blue-deep), var(--ink));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lede{
+    margin-top:18px; max-width:52ch;
+    font-size:17px; color:var(--ink-dim); font-weight:600;
+  }
+  .cta-row{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 26px; border-radius:999px;
+    font-size:14px; font-weight:800; letter-spacing:.01em;
+    font-family:'Manrope', sans-serif;
+    cursor:pointer; border:2px solid transparent; text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--blue), var(--sage));
+    color:#fff;
+    box-shadow:0 6px 18px rgba(126,155,196,.35);
+  }
+  .btn-primary:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 8px 22px rgba(126,155,196,.45);}
+  .btn-ghost{border-color:var(--blue-deep); color:var(--blue-deep); background:#fff;}
+  .btn-ghost:hover{background:var(--bg-soft); transform:translateY(-1px);}
+
+  /* PROGRESS LEDGER — signature element */
+  .ledger{
+    margin-top:46px;
+    background:var(--card);
+    border:3px solid var(--line);
+    border-radius:24px;
+    padding:26px 26px 22px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(43,39,36,.08);
+  }
+  .ledger::before{
+    content:'';
+    position:absolute; left:0; top:0; right:0; height:6px;
+    background:linear-gradient(90deg, var(--blue), var(--sage), var(--lavender));
+  }
+  .ledger-head{display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;}
+  .ledger-label{font-family:'Manrope', sans-serif; font-size:12px; letter-spacing:.04em; color:var(--ink-dim); text-transform:uppercase; font-weight:600;}
+  .ledger-count{
+    font-family:'Manrope', sans-serif;
+    font-size:clamp(30px, 5vw, 44px);
+    font-weight:700;
+    color:var(--ink);
+    margin:8px 0 4px;
+  }
+  .ledger-count span{color:var(--blue-deep);}
+  .ledger-sub{font-size:13px; color:var(--ink-dim); font-weight:700;}
+  .bar-track{margin-top:16px; height:12px; background:var(--bg-soft); border-radius:999px; overflow:hidden;}
+  .bar-fill{height:100%; background:linear-gradient(90deg, var(--blue), var(--sage)); width:0%; border-radius:999px; transition:width .6s ease;}
+
+  /* SECTION shell */
+  section{padding:60px 0;}
+  .section-head{margin-bottom:32px;}
+  .num-tag{font-family:'Manrope', sans-serif; color:var(--blue-deep); font-size:13px; letter-spacing:.04em; font-weight:600;}
+  h2{font-family:'Manrope', sans-serif; font-weight:700; font-size:clamp(24px,3.6vw,32px); margin-top:6px; color:var(--ink); letter-spacing:-.01em;}
+  .section-sub{color:var(--ink-dim); margin-top:10px; max-width:56ch; font-size:15px; font-weight:600;}
+
+  /* HOW IT WORKS */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .step{background:var(--card); padding:24px 20px; border-radius:20px; border:2px solid var(--line);}
+  .step:nth-child(1){background:#EEF2F7;}
+  .step:nth-child(2){background:#F1F4EA;}
+  .step:nth-child(3){background:#F1F1EE;}
+  .step-n{font-family:'Manrope', sans-serif; color:var(--blue-deep); font-size:14px; font-weight:600;}
+  .step h3{font-family:'Manrope', sans-serif; font-size:20px; margin:10px 0 8px; font-weight:700; color:var(--ink);}
+  .step p{font-size:14px; color:var(--ink-dim); font-weight:600;}
+  @media(max-width:720px){.steps{grid-template-columns:1fr;}}
+
+  /* PRIZE */
+  .prize-card{
+    background:linear-gradient(155deg, var(--ink), #4A453F);
+    border-radius:28px;
+    padding:36px;
+    position:relative;
+    color:#fff;
+    box-shadow:0 14px 34px rgba(43,39,36,.28);
+  }
+  .prize-card::after{
+    content:'TOP 5 ONLY'; position:absolute; top:-13px; right:26px;
+    background:var(--sage); color:var(--ink); font-family:'Manrope',sans-serif;
+    font-size:11px; letter-spacing:.04em; padding:6px 12px; border-radius:999px; font-weight:600;
+    transform:rotate(4deg);
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+  }
+  .prize-card h3{font-family:'Manrope',sans-serif; font-size:27px; font-weight:700; max-width:20ch; letter-spacing:-.01em;}
+  .prize-card p{margin-top:14px; color:rgba(255,255,255,.9); max-width:56ch; font-size:15px; font-weight:600;}
+  .prize-list{margin-top:20px; display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{font-size:13px; font-weight:700; background:rgba(255,255,255,.18); padding:7px 14px; border-radius:999px; color:#fff;}
+
+  /* FORMS */
+  .card{background:var(--card); border:2px solid var(--line); border-radius:22px; padding:26px;}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  @media(max-width:760px){.grid-2{grid-template-columns:1fr;}}
+  label{display:block; font-size:12px; letter-spacing:.03em; color:var(--ink-dim); margin-bottom:6px; margin-top:16px; text-transform:uppercase; font-family:'Manrope',sans-serif; font-weight:600;}
+  label:first-of-type{margin-top:0;}
+  input, textarea, select{
+    width:100%; background:var(--bg-soft); border:2px solid var(--line); color:var(--ink);
+    padding:12px 14px; border-radius:14px; font-family:'Manrope',sans-serif; font-weight:700; font-size:14px;
+  }
+  input:focus, textarea:focus, select:focus{outline:none; border-color:var(--blue-deep);}
+  textarea{min-height:88px; resize:vertical;}
+  .form-msg{margin-top:14px; font-size:13px; font-weight:700; font-family:'Manrope',sans-serif;}
+  .form-msg.ok{color:#5C8A66;}
+  .form-msg.err{color:#B8564A;}
+  button:disabled{opacity:.6; cursor:not-allowed;}
+
+  /* LEADERBOARD */
+  .row{
+    display:grid; grid-template-columns:40px 1fr auto; gap:14px; align-items:center;
+    padding:14px 6px; border-bottom:2px dashed var(--line);
+  }
+  .row:last-child{border-bottom:none;}
+  .rank{
+    font-family:'Manrope',sans-serif; font-size:15px; font-weight:600; color:var(--ink-dim);
+    background:var(--bg-soft); width:32px; height:32px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .rank.top{color:#fff; background:linear-gradient(135deg, var(--blue), var(--sage));}
+  .who{display:flex; flex-direction:column;}
+  .who .name{font-weight:800; font-size:15px;}
+  .who .handle{font-size:12px; color:var(--ink-dim); font-weight:700;}
+  .pts{font-family:'Manrope',sans-serif; font-size:14px; text-align:right; color:var(--ink-dim);}
+  .pts .n{font-weight:600; color:var(--blue-deep); font-size:16px;}
+  .seat-badge{font-size:10px; font-weight:700; background:rgba(199,217,166,.35); color:#5C6B45; padding:2px 8px; border-radius:999px; margin-top:4px; display:inline-block; width:fit-content;}
+  .empty{color:var(--ink-dim); font-size:14px; padding:20px 4px; font-weight:600;}
+
+  /* WINS FEED */
+  .win-item{padding:14px 0; border-bottom:2px dashed var(--line);}
+  .win-item:last-child{border-bottom:none;}
+  .win-top{display:flex; justify-content:space-between; gap:12px; font-size:12px; color:var(--ink-dim); font-weight:700;}
+  .win-text{margin-top:6px; font-size:14px; font-weight:600;}
+
+  /* ADMIN */
+  .admin-toggle{color:var(--ink-dim); font-size:12px; font-weight:700; text-decoration:underline; cursor:pointer; background:none; border:none; font-family:'Manrope',sans-serif;}
+  .admin-panel{margin-top:16px; display:none;}
+  .admin-panel.open{display:block;}
+  .pin-row{display:flex; gap:10px; margin-top:10px;}
+  .pin-row input{flex:1;}
+
+  footer{padding:36px 0 56px; text-align:center; color:var(--ink-dim); font-size:13px; font-weight:700;}
+
+
+  .earn-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:720px){.earn-grid{grid-template-columns:1fr;}}
+  .earn-item{
+    display:flex; gap:16px; align-items:flex-start;
+    background:var(--card); border:2px solid var(--line); border-radius:20px; padding:22px;
+  }
+  .earn-badge{
+    flex-shrink:0;
+    font-family:'Manrope', sans-serif; font-weight:800; font-size:14px;
+    color:#fff; background:linear-gradient(135deg, var(--blue-deep), var(--sage));
+    padding:8px 12px; border-radius:999px; min-width:48px; text-align:center;
+  }
+  .earn-item h3{font-family:'Manrope', sans-serif; font-weight:700; font-size:16px; margin-bottom:6px; color:var(--ink);}
+  .earn-item p{font-size:13.5px; color:var(--ink-dim); font-weight:600; line-height:1.5;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="stamp">ZERO TO A MIL · 365 DAYS</div>
+    <a href="#join" class="nav-link">Join the build →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Zero to a Mil · Built in public</div>
+    <h1>I'm taking Innersource The App from <em>$0 to $1,000,000.</em> One year. Out loud.</h1>
+    <p class="lede">Every sale, every stumble, every glow-up — out in the open for the next 365 days. Bring the energy and you could be flying out with me for a 3-day money &amp; business retreat, all expenses paid.</p>
+    <div class="cta-row">
+      <a href="#join" class="btn btn-primary">Join the challenge</a>
+      <a href="#ledger" class="btn btn-ghost">See the ledger</a>
+    </div>
+
+    <div class="ledger">
+      <div class="ledger-head">
+        <div>
+          <div class="ledger-label">Current progress</div>
+          <div class="ledger-count" id="revText">$<span id="revNum">0</span></div>
+          <div class="ledger-sub" id="revSub">toward $1,000,000 · 365 days on the clock</div>
+        </div>
+        <div class="ledger-label" id="pctText">0%</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap"><div class="perf"></div></div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">How it works</div>
+      <h2>Three moves. Zero excuses.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h3>Join</h3>
+        <p>Drop your name, email, and social handle. You're officially in the challenge.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h3>Engage</h3>
+        <p>Comment, reshare, show up on the content. The most engaged followers get logged on the ledger.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h3>Log your wins</h3>
+        <p>Building your own thing alongside the challenge? Submit your wins below — they're part of the story too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="earn">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">Scoring</div>
+      <h2>How you earn points</h2>
+      <p class="section-sub">Everything on the ledger comes from one of these. Stack as many as you can.</p>
+    </div>
+    <div class="earn-grid">
+      <div class="earn-item">
+        <div class="earn-badge">+20</div>
+        <div>
+          <h3>Be a member</h3>
+          <p>Already inside the app? You get a head start the moment you join the challenge — added automatically.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+10</div>
+        <div>
+          <h3>Refer a friend</h3>
+          <p>Share your personal link after you join. Every friend who signs up through it earns you points — automatically.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+5</div>
+        <div>
+          <h3>Comment on a post</h3>
+          <p>Drop a real comment on any challenge post. It's tracked and added automatically, no need to submit anything.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">Manual</div>
+        <div>
+          <h3>Reshare to your Story</h3>
+          <p>Reshare a post and send a screenshot. Reviewed and added by hand during the weekly points update.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+15</div>
+        <div>
+          <h3>Post your own content</h3>
+          <p>Create your own post or video about the challenge and tag it. Worth more than a comment — reviewed and added by hand.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+10</div>
+        <div>
+          <h3>Milestone hype bonus</h3>
+          <p>Every time the revenue ledger crosses a milestone — $10K, $50K, and beyond — everyone active gets a bump. You're part of the story.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+5/wk</div>
+        <div>
+          <h3>Weekly streak</h3>
+          <p>Log a win or comment every week without missing one, and each consecutive week adds a streak bonus on top.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+5/wk</div>
+        <div>
+          <h3>Still here bonus</h3>
+          <p>Made it past week 4 and still showing up? You get a small recurring bonus just for sticking around.</p>
+        </div>
+      </div>
+      <div class="earn-item">
+        <div class="earn-badge">+5/mo</div>
+        <div>
+          <h3>Share your income</h3>
+          <p>Log your monthly income once a month. Private — only visible to the creator, never on the leaderboard.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="prize">
+  <div class="wrap">
+    <div class="prize-card">
+      <h3>The Prize: A 3-Day Money &amp; Business Retreat — Location TBD</h3>
+      <p>The top 5 most engaged people on the ledger fly out to join me for three days of strategy, real talk about the build, and good food — all expenses paid. Consider it a working vacation with purpose.</p>
+      <div class="prize-list">
+        <div class="chip">Flights covered</div>
+        <div class="chip">Stay covered</div>
+        <div class="chip">3 days, in person</div>
+        <div class="chip">Top 5 only</div>
+      </div>
+      <p style="margin-top:16px; font-size:12px; color:rgba(255,255,255,.75);">*Destination is under wraps for now — expect it to be vibey and completely on-brand. Details drop soon.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="perf"></div></div>
+
+<section id="join">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">Step 01</div>
+      <h2>Join the challenge</h2>
+      <p class="section-sub">Takes ten seconds. You'll show up on the ledger once you start engaging.</p>
+    </div>
+    <div class="card">
+      <form id="joinForm">
+        <label for="jName">Name</label>
+        <input id="jName" required placeholder="Your name">
+        <label for="jEmail">Email</label>
+        <input id="jEmail" type="email" required placeholder="you@email.com">
+        <label for="jHandle">Social handle (IG / X / TikTok)</label>
+        <input id="jHandle" required placeholder="@yourhandle">
+        <div class="cta-row" style="margin-top:22px;">
+          <button type="submit" class="btn btn-primary" id="joinBtn">Join the build</button>
+        </div>
+        <div class="form-msg" id="joinMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="wins">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">Step 03</div>
+      <h2>Log a win</h2>
+      <p class="section-sub">Already joined? Log a business win — big or small — and it'll show up in the feed.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <form id="winForm">
+          <label for="wEmail">Your email (used to join)</label>
+          <input id="wEmail" type="email" required placeholder="you@email.com">
+          <label for="wText">What's the win?</label>
+          <textarea id="wText" required placeholder="Hit $500 in sales this week, landed my first client, launched my offer..."></textarea>
+          <div class="cta-row" style="margin-top:18px;">
+            <button type="submit" class="btn btn-primary" id="winBtn">Log win</button>
+          </div>
+          <div class="form-msg" id="winMsg"></div>
+        </form>
+      </div>
+      <div class="card">
+        <div class="ledger-label" style="margin-bottom:14px;">Recent wins</div>
+        <div id="winsFeed"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="income">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">Optional · Private</div>
+      <h2>Log your monthly income</h2>
+      <p class="section-sub">Only I can see this — it never shows on the leaderboard or feed. One submission per month earns a small bonus.</p>
+    </div>
+    <div class="card" style="max-width:480px;">
+      <form id="incomeForm">
+        <label for="iEmail">Your email (used to join)</label>
+        <input id="iEmail" type="email" required placeholder="you@email.com">
+        <label for="iAmount">This month's income ($)</label>
+        <input id="iAmount" type="number" min="0" step="1" required placeholder="e.g. 2400">
+        <div class="cta-row" style="margin-top:18px;">
+          <button type="submit" class="btn btn-primary" id="incomeBtn">Submit privately</button>
+        </div>
+        <div class="form-msg" id="incomeMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="perf"></div></div>
+
+<section id="ledger">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num-tag">The Ledger</div>
+      <h2>Top 5 most engaged</h2>
+      <p class="section-sub">Ranked by engagement points. The top 5 hold seats for the retreat.</p>
+    </div>
+    <div class="card">
+      <div id="leaderboard"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="admin">
+  <div class="wrap">
+    <button class="admin-toggle" id="adminToggle">Creator access</button>
+    <div class="admin-panel" id="adminPanel">
+      <div class="pin-row">
+        <input type="password" id="pinInput" placeholder="PIN">
+        <button class="btn btn-ghost" id="pinSubmit">Unlock</button>
+      </div>
+      <div id="adminControls" style="display:none; margin-top:20px;" class="card">
+        <label for="revInput">Update total revenue ($)</label>
+        <div class="pin-row">
+          <input id="revInput" type="number" placeholder="e.g. 42000">
+          <button class="btn btn-ghost" id="revSubmit">Update</button>
+        </div>
+        <label for="engEmail" style="margin-top:24px;">Add engagement points</label>
+        <input id="engEmail" type="email" placeholder="participant email">
+        <div class="pin-row" style="margin-top:10px;">
+          <input id="engPoints" type="number" placeholder="points to add">
+          <button class="btn btn-ghost" id="engSubmit">Add points</button>
+        </div>
+        <div class="form-msg" id="adminMsg"></div>
+
+        <label style="margin-top:24px;">Private income reports</label>
+        <button class="btn btn-ghost" id="viewIncomeBtn" type="button">Load income reports</button>
+        <div id="incomeReports" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Zero to a Mil · Built in public, one day at a time. Ledger updates live for everyone watching.</footer>
+
+<script>
+const GOAL = 1000000;
+
+function fmtMoney(n){ return Number(n||0).toLocaleString('en-US'); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function timeAgo(iso){
+  const d = new Date(iso), now = new Date();
+  const mins = Math.floor((now-d)/60000);
+  if(mins < 1) return 'just now';
+  if(mins < 60) return mins+'m ago';
+  const hrs = Math.floor(mins/60);
+  if(hrs < 24) return hrs+'h ago';
+  return Math.floor(hrs/24)+'d ago';
+}
+
+async function loadData(){
+  try{
+    const res = await fetch('/api/data');
+    const data = await res.json();
+    render(data);
+  }catch(e){
+    console.error('failed to load data', e);
+    document.getElementById('leaderboard').innerHTML = '<div class="empty">Couldn\'t load the ledger. Refresh to try again.</div>';
+  }
+}
+
+function render(data){
+  const rev = data.revenueTotal || 0;
+  const pct = Math.min(100, (rev/GOAL)*100);
+  document.getElementById('revNum').textContent = fmtMoney(rev);
+  document.getElementById('pctText').textContent = pct.toFixed(1)+'%';
+  document.getElementById('barFill').style.width = pct+'%';
+
+  const ranked = data.participants || [];
+  const lbEl = document.getElementById('leaderboard');
+  if(ranked.length === 0){
+    lbEl.innerHTML = '<div class="empty">No one on the ledger yet — join above to be first.</div>';
+  } else {
+    lbEl.innerHTML = ranked.slice(0,5).map((p,i) => `
+      <div class="row">
+        <div class="rank ${i<5?'top':''}">${String(i+1).padStart(2,'0')}</div>
+        <div class="who">
+          <div class="name">${esc(p.name)}</div>
+          <div class="handle">${esc(p.social)}</div>
+          ${i<5 ? '<div class="seat-badge">Retreat seat</div>' : ''}
+        </div>
+        <div class="pts"><span class="n">${p.points}</span> pts</div>
+      </div>
+    `).join('');
+  }
+
+  const feedEl = document.getElementById('winsFeed');
+  const recentWins = data.wins || [];
+  if(recentWins.length === 0){
+    feedEl.innerHTML = '<div class="empty">No wins logged yet — be the first.</div>';
+  } else {
+    feedEl.innerHTML = recentWins.map(w => `
+      <div class="win-item">
+        <div class="win-top"><span>${esc(w.name)}</span><span>${timeAgo(w.created_at)}</span></div>
+        <div class="win-text">${esc(w.text)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+document.getElementById('joinForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('jName').value.trim();
+  const email = document.getElementById('jEmail').value.trim();
+  const social = document.getElementById('jHandle').value.trim();
+  const msg = document.getElementById('joinMsg');
+  const btn = document.getElementById('joinBtn');
+  btn.disabled = true;
+
+  try{
+    const res = await fetch('/api/join', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({name, email, social})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      msg.textContent = result.error === 'already-joined'
+        ? "You're already on the ledger with this email."
+        : "Something went wrong. Try again.";
+      msg.className = 'form-msg err';
+    } else {
+      msg.textContent = "You're in. Start engaging to climb the ledger.";
+      msg.className = 'form-msg ok';
+      e.target.reset();
+      loadData();
+    }
+  }catch(err){
+    msg.textContent = "Network error. Try again.";
+    msg.className = 'form-msg err';
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('winForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('wEmail').value.trim();
+  const text = document.getElementById('wText').value.trim();
+  const msg = document.getElementById('winMsg');
+  const btn = document.getElementById('winBtn');
+  btn.disabled = true;
+
+  try{
+    const res = await fetch('/api/win', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({email, text})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      msg.textContent = result.error === 'not-found'
+        ? "That email isn't on the ledger yet — join the challenge first."
+        : "Something went wrong. Try again.";
+      msg.className = 'form-msg err';
+    } else {
+      msg.textContent = "Win logged. Nice work.";
+      msg.className = 'form-msg ok';
+      e.target.reset();
+      loadData();
+    }
+  }catch(err){
+    msg.textContent = "Network error. Try again.";
+    msg.className = 'form-msg err';
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('incomeForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('iEmail').value.trim();
+  const amount = document.getElementById('iAmount').value;
+  const msg = document.getElementById('incomeMsg');
+  const btn = document.getElementById('incomeBtn');
+  btn.disabled = true;
+
+  try{
+    const res = await fetch('/api/income', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({email, amount})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      msg.textContent = result.error === 'not-found' ? "That email isn't on the ledger yet — join the challenge first."
+        : result.error === 'already-submitted' ? "You've already logged income for this month."
+        : "Something went wrong. Try again.";
+      msg.className = 'form-msg err';
+    } else {
+      msg.textContent = "Logged privately. Thanks for the transparency.";
+      msg.className = 'form-msg ok';
+      e.target.reset();
+      loadData();
+    }
+  }catch(err){
+    msg.textContent = "Network error. Try again.";
+    msg.className = 'form-msg err';
+  }
+  btn.disabled = false;
+});
+
+let adminPin = null;
+document.getElementById('adminToggle').addEventListener('click', () => {
+  document.getElementById('adminPanel').classList.toggle('open');
+});
+document.getElementById('pinSubmit').addEventListener('click', () => {
+  adminPin = document.getElementById('pinInput').value;
+  document.getElementById('adminControls').style.display = 'block';
+});
+document.getElementById('revSubmit').addEventListener('click', async () => {
+  const val = Number(document.getElementById('revInput').value);
+  const adminMsg = document.getElementById('adminMsg');
+  if(isNaN(val) || val < 0){
+    adminMsg.textContent = 'Enter a valid number.';
+    adminMsg.className = 'form-msg err';
+    return;
+  }
+  const res = await fetch('/api/admin', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body: JSON.stringify({pin: adminPin, action:'revenue', amount: val})
+  });
+  const result = await res.json();
+  if(!res.ok){
+    adminMsg.textContent = result.error === 'unauthorized' ? 'Wrong PIN.' : 'Something went wrong.';
+    adminMsg.className = 'form-msg err';
+    return;
+  }
+  adminMsg.textContent = 'Revenue updated.';
+  adminMsg.className = 'form-msg ok';
+  loadData();
+});
+document.getElementById('engSubmit').addEventListener('click', async () => {
+  const email = document.getElementById('engEmail').value.trim();
+  const pts = Number(document.getElementById('engPoints').value);
+  const adminMsg = document.getElementById('adminMsg');
+  if(!email || isNaN(pts)){
+    adminMsg.textContent = 'Enter a valid email and point value.';
+    adminMsg.className = 'form-msg err';
+    return;
+  }
+  const res = await fetch('/api/admin', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body: JSON.stringify({pin: adminPin, action:'engagement', email, points: pts})
+  });
+  const result = await res.json();
+  if(!res.ok){
+    adminMsg.textContent = result.error === 'unauthorized' ? 'Wrong PIN.'
+      : result.error === 'not-found' ? 'No participant with that email.'
+      : 'Something went wrong.';
+    adminMsg.className = 'form-msg err';
+    return;
+  }
+  adminMsg.textContent = `Added ${pts} pts.`;
+  adminMsg.className = 'form-msg ok';
+  document.getElementById('engEmail').value = '';
+  document.getElementById('engPoints').value = '';
+  loadData();
+});
+
+document.getElementById('viewIncomeBtn').addEventListener('click', async () => {
+  const container = document.getElementById('incomeReports');
+  container.innerHTML = '<div class="empty">Loading…</div>';
+  try{
+    const res = await fetch('/api/admin', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({pin: adminPin, action:'list-income'})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      container.innerHTML = `<div class="form-msg err">${result.error === 'unauthorized' ? 'Wrong PIN.' : 'Something went wrong.'}</div>`;
+      return;
+    }
+    if(result.reports.length === 0){
+      container.innerHTML = '<div class="empty">No income reports yet.</div>';
+      return;
+    }
+    container.innerHTML = result.reports.map(r => `
+      <div class="win-item">
+        <div class="win-top"><span>${r.name} (${r.email})</span><span>${r.month_key}</span></div>
+        <div class="win-text">$${Number(r.amount).toLocaleString('en-US')}</div>
+      </div>
+    `).join('');
+  }catch(err){
+    container.innerHTML = '<div class="form-msg err">Network error.</div>';
+  }
+});
+
+loadData();
+</script>
+</body>
+</html>

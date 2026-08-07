@@ -1,0 +1,2 @@
+ALTER TABLE participants
+  ADD COLUMN IF NOT EXISTS is_member BOOLEAN NOT NULL DEFAULT false;

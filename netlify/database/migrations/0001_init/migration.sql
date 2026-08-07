@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS participants (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  social TEXT NOT NULL,
+  points INTEGER NOT NULL DEFAULT 0,
+  joined_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS wins (
+  id SERIAL PRIMARY KEY,
+  participant_id INTEGER NOT NULL REFERENCES participants(id) ON DELETE CASCADE,
+  text TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+INSERT INTO settings (key, value)
+VALUES ('revenue_total', '0')
+ON CONFLICT (key) DO NOTHING;
