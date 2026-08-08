@@ -11,7 +11,7 @@ export default async (req: Request, context: Context) => {
   `;
 
   const wins = await db.sql`
-    SELECT w.id, w.text, w.created_at, p.name
+    SELECT w.id, w.text, w.created_at, w.category, p.name
     FROM wins w
     JOIN participants p ON w.participant_id = p.id
     ORDER BY w.created_at DESC

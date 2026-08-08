@@ -57,6 +57,8 @@ async function recordStreakActivity(db: ReturnType<typeof getDatabase>, particip
   }
 }
 
+const VALID_CATEGORIES = ["business_win", "shared_story", "posted_content", "other"];
+
 export default async (req: Request, context: Context) => {
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "method-not-allowed" }), {
@@ -68,6 +70,7 @@ export default async (req: Request, context: Context) => {
   const body = await req.json().catch(() => null);
   const email = body?.email?.trim();
   const text = body?.text?.trim();
+  const category = VALID_CATEGORIES.includes(body?.category) ? body.category : "business_win";
 
   if (!email || !text) {
     return new Response(JSON.stringify({ error: "missing-fields" }), {
@@ -87,8 +90,8 @@ export default async (req: Request, context: Context) => {
   }
 
   await db.sql`
-    INSERT INTO wins (participant_id, text)
-    VALUES (${rows[0].id}, ${text})
+    INSERT INTO wins (participant_id, text, category)
+    VALUES (${rows[0].id}, ${text}, ${category})
   `;
 
   await recordStreakActivity(db, rows[0].id);

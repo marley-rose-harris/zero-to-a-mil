@@ -260,7 +260,7 @@
     <div class="ledger">
       <div class="ledger-head">
         <div>
-          <div class="ledger-label">Current progress</div>
+          <div class="ledger-label">My road to $1M — updated as the business grows</div>
           <div class="ledger-count" id="revText">$<span id="revNum">0</span></div>
           <div class="ledger-sub" id="revSub">toward $1,000,000 · 365 days on the clock</div>
         </div>
@@ -329,17 +329,17 @@
         </div>
       </div>
       <div class="earn-item">
-        <div class="earn-badge">Manual</div>
+        <div class="earn-badge">+10</div>
         <div>
-          <h3>Reshare to your Story</h3>
-          <p>Reshare a post and send a screenshot. Reviewed and added by hand during the weekly points update.</p>
+          <h3>Share your story</h3>
+          <p>Post about the challenge to your Story and tag @Innersource or @marleyroseharris. Log it under "Log a win" so it gets reviewed.</p>
         </div>
       </div>
       <div class="earn-item">
         <div class="earn-badge">+15</div>
         <div>
           <h3>Post your own content</h3>
-          <p>Create your own post or video about the challenge and tag it. Worth more than a comment — reviewed and added by hand.</p>
+          <p>Create your own post or video about the challenge and tag it. Worth more than a comment. Log it under "Log a win" so it gets reviewed.</p>
         </div>
       </div>
       <div class="earn-item">
@@ -428,10 +428,17 @@
         <form id="winForm">
           <label for="wEmail">Your email (used to join)</label>
           <input id="wEmail" type="email" required placeholder="you@email.com">
-          <label for="wText">What's the win?</label>
+          <label for="wCategory">What is this?</label>
+          <select id="wCategory">
+            <option value="business_win">A business win</option>
+            <option value="shared_story">I shared my story (tagged @Innersource or @marleyroseharris) — +10</option>
+            <option value="posted_content">I posted my own content about the challenge — +15</option>
+            <option value="other">Something else</option>
+          </select>
+          <label for="wText">Tell us about it</label>
           <textarea id="wText" required placeholder="Hit $500 in sales this week, landed my first client, launched my offer..."></textarea>
           <div class="cta-row" style="margin-top:18px;">
-            <button type="submit" class="btn btn-primary" id="winBtn">Log win</button>
+            <button type="submit" class="btn btn-primary" id="winBtn">Log it</button>
           </div>
           <div class="form-msg" id="winMsg"></div>
         </form>
@@ -449,7 +456,7 @@
     <div class="section-head">
       <div class="num-tag">Optional · Private</div>
       <h2>Log your monthly income</h2>
-      <p class="section-sub">Only I can see this — it never shows on the leaderboard or feed. One submission per month earns a small bonus.</p>
+      <p class="section-sub">🔒 Private, not anonymous: only the creator sees this, tied to your email so the bonus lands on your account. It's never shown to other participants, never on the leaderboard, and never in the public feed. One submission per month earns a small bonus.</p>
     </div>
     <div class="card" style="max-width:480px;">
       <form id="incomeForm">
@@ -572,10 +579,25 @@ function render(data){
     feedEl.innerHTML = recentWins.map(w => `
       <div class="win-item">
         <div class="win-top"><span>${esc(w.name)}</span><span>${timeAgo(w.created_at)}</span></div>
+        ${w.category && w.category !== 'business_win' ? `<div class="${categoryTagClass(w.category)}" style="margin-top:4px; margin-bottom:4px;">${categoryLabel(w.category)}</div>` : ''}
         <div class="win-text">${esc(w.text)}</div>
       </div>
     `).join('');
   }
+}
+
+function categoryLabel(cat){
+  const labels = {
+    business_win: 'Business win',
+    shared_story: 'Shared story · claiming +10',
+    posted_content: 'Posted content · claiming +15',
+    other: 'Other'
+  };
+  return labels[cat] || 'Business win';
+}
+
+function categoryTagClass(cat){
+  return (cat === 'shared_story' || cat === 'posted_content') ? 'seat-badge' : '';
 }
 
 document.getElementById('joinForm').addEventListener('submit', async (e) => {
@@ -616,6 +638,7 @@ document.getElementById('winForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('wEmail').value.trim();
   const text = document.getElementById('wText').value.trim();
+  const category = document.getElementById('wCategory').value;
   const msg = document.getElementById('winMsg');
   const btn = document.getElementById('winBtn');
   btn.disabled = true;
@@ -624,7 +647,7 @@ document.getElementById('winForm').addEventListener('submit', async (e) => {
     const res = await fetch('/api/win', {
       method: 'POST',
       headers: {'content-type':'application/json'},
-      body: JSON.stringify({email, text})
+      body: JSON.stringify({email, text, category})
     });
     const result = await res.json();
     if(!res.ok){
@@ -633,7 +656,7 @@ document.getElementById('winForm').addEventListener('submit', async (e) => {
         : "Something went wrong. Try again.";
       msg.className = 'form-msg err';
     } else {
-      msg.textContent = "Win logged. Nice work.";
+      msg.textContent = "Logged. If this earns bonus points, they'll show up after review.";
       msg.className = 'form-msg ok';
       e.target.reset();
       loadData();

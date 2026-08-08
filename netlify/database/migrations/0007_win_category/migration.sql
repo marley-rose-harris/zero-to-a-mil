@@ -1,0 +1,2 @@
+ALTER TABLE wins
+  ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'business_win';
