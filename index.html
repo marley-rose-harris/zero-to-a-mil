@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zero to a Mil — The Innersource Challenge</title>
+<title>Zero to a Mil: The Innersource Challenge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -208,6 +208,17 @@
 
   /* FORMS */
   .card{background:var(--card); border:2px solid var(--line); border-radius:22px; padding:26px;}
+
+  .video-embed{
+    position:relative; width:100%; padding-top:56.25%;
+    border-radius:22px; overflow:hidden;
+    border:2px solid var(--line);
+    box-shadow:0 10px 30px rgba(43,39,36,.10);
+    margin-bottom:24px;
+  }
+  .video-embed iframe{
+    position:absolute; top:0; left:0; width:100%; height:100%; border:0;
+  }
   .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
   @media(max-width:760px){.grid-2{grid-template-columns:1fr;}}
   label{display:block; font-size:12px; letter-spacing:.03em; color:var(--ink-dim); margin-bottom:6px; margin-top:16px; text-transform:uppercase; font-family:'Manrope',sans-serif; font-weight:600;}
@@ -256,6 +267,16 @@
   .pin-row{display:flex; gap:10px; margin-top:10px;}
   .pin-row input{flex:1;}
 
+  .social-links{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:8px;}
+  .social-link{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px; border-radius:999px;
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:14px;
+    color:var(--ink); background:var(--card); border:2px solid var(--line);
+    text-decoration:none; transition:transform .15s ease, border-color .15s ease;
+  }
+  .social-link:hover{border-color:var(--blue-deep); color:var(--blue-deep); transform:translateY(-1px);}
+
   footer{padding:36px 0 56px; text-align:center; color:var(--ink-dim); font-size:13px; font-weight:700;}
 
 
@@ -288,7 +309,7 @@
   <div class="wrap">
     <div class="eyebrow">Zero to a Mil · Built in public</div>
     <h1>I'm taking Innersource The App from <em>$0 to $1,000,000.</em> One year. Out loud.</h1>
-    <p class="lede">Every sale, every stumble, every glow-up — out in the open for the next 365 days. Bring the energy and you could be flying out with me for a 3-day money &amp; business retreat, all expenses paid.</p>
+    <p class="lede">Every sale, every stumble, every glow-up: out in the open for the next 365 days. Bring the energy and you could be flying out with me for a 3-day money &amp; business retreat, all expenses paid.</p>
     <div class="cta-row">
       <a href="#join" class="btn btn-primary">Join the challenge</a>
       <a href="#ledger" class="btn btn-ghost">See the ledger</a>
@@ -297,7 +318,7 @@
     <div class="ledger">
       <div class="ledger-head">
         <div>
-          <div class="ledger-label">My road to $1M — updated as the business grows</div>
+          <div class="ledger-label">My road to $1M (updated as the business grows)</div>
           <div class="ledger-count" id="revText">$<span id="revNum">0</span></div>
           <div class="ledger-sub" id="revSub">toward $1,000,000 · 365 days on the clock</div>
         </div>
@@ -310,16 +331,26 @@
 
 <div class="wrap"><div class="perf"></div></div>
 
+<section id="video">
+  <div class="wrap">
+    <div class="video-embed" style="margin-top:8px;">
+      <iframe src="https://www.youtube.com/embed/NQOKEymEv5o" title="Zero to a Mil" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="perf"></div></div>
+
 <section id="playbook">
   <div class="wrap">
     <div class="section-head">
       <div class="num-tag">The Real Challenge</div>
       <h2>This isn't just a follow-along.</h2>
-      <p class="section-sub">Every week for the next year, I'm sharing exactly what I'm doing — on Instagram, the podcast, and YouTube — to take Innersource from $0 to $1,000,000. Not the highlight reel. The actual playbook: the strategies, the numbers, the mistakes.</p>
+      <p class="section-sub">Every week for the next year, I'm sharing exactly what I'm doing (on Instagram, the podcast, and YouTube) to take Innersource from $0 to $1,000,000. Not the highlight reel. The actual playbook: the strategies, the numbers, the mistakes.</p>
     </div>
     <div class="card">
       <p style="font-size:16px; font-weight:700; color:var(--ink);">Your job isn't to watch. It's to implement.</p>
-      <p style="margin-top:10px; font-size:15px; color:var(--ink-dim); font-weight:600;">Take what I'm teaching, apply it in your own business, and grow alongside me. Every time you put it into practice, log it as a win — that's how you climb the ledger. Whoever shows the biggest, best results from actually implementing this is who takes the challenge.</p>
+      <p style="margin-top:10px; font-size:15px; color:var(--ink-dim); font-weight:600;">Take what I'm teaching, apply it in your own business, and grow alongside me. Every time you put it into practice, log it as a win. That's how you climb the ledger. Whoever shows the biggest, best results from actually implementing this is who takes the challenge.</p>
     </div>
   </div>
 </section>
@@ -346,7 +377,7 @@
       <div class="step">
         <div class="step-n">03</div>
         <h3>Log your wins</h3>
-        <p>Building your own thing alongside the challenge? Submit your wins below — they're part of the story too.</p>
+        <p>Building your own thing alongside the challenge? Submit your wins below. They're part of the story too.</p>
       </div>
     </div>
   </div>
@@ -364,14 +395,14 @@
         <div class="earn-badge">+20</div>
         <div>
           <h3>Be a member</h3>
-          <p>Already inside the app? You get a head start the moment you join the challenge — added automatically.</p>
+          <p>Already inside the app? You get a head start the moment you join the challenge, added automatically.</p>
         </div>
       </div>
       <div class="earn-item">
         <div class="earn-badge">+10</div>
         <div>
           <h3>Refer a friend</h3>
-          <p>Share your personal link after you join. Every friend who signs up through it earns you points — automatically.</p>
+          <p>Share your personal link after you join. Every friend who signs up through it automatically earns you points.</p>
         </div>
       </div>
       <div class="earn-item">
@@ -399,7 +430,7 @@
         <div class="earn-badge">+10</div>
         <div>
           <h3>Milestone hype bonus</h3>
-          <p>Every time the revenue ledger crosses a milestone — $10K, $50K, and beyond — everyone active gets a bump. You're part of the story.</p>
+          <p>Every time the revenue ledger crosses a milestone ($10K, $50K, and beyond), everyone active gets a bump. You're part of the story.</p>
         </div>
       </div>
       <div class="earn-item">
@@ -420,7 +451,7 @@
         <div class="earn-badge">+5/mo</div>
         <div>
           <h3>Share your income</h3>
-          <p>Log your monthly income once a month. Private — only visible to the creator, never on the leaderboard.</p>
+          <p>Log your monthly income once a month. Private: only visible to the creator, never on the leaderboard.</p>
         </div>
       </div>
     </div>
@@ -436,15 +467,15 @@
       <div class="cash-hero-sub">Cash. In your account. No strings.</div>
     </div>
     <div class="prize-card">
-      <h3>Plus: A 3-Day Money &amp; Business Retreat — Location TBD</h3>
-      <p>The top 5 most engaged people on the ledger fly out to join me for three days of strategy, real talk about the build, and good food — all expenses paid. Consider it a working vacation with purpose.</p>
+      <h3>Plus: A 3-Day Money &amp; Business Retreat (Location TBD)</h3>
+      <p>The top 5 most engaged people on the ledger fly out to join me for three days of strategy, real talk about the build, and good food, all expenses paid. Consider it a working vacation with purpose.</p>
       <div class="prize-list">
         <div class="chip">Flights covered</div>
         <div class="chip">Stay covered</div>
         <div class="chip">3 days, in person</div>
         <div class="chip">Top 5 only</div>
       </div>
-      <p style="margin-top:16px; font-size:12px; color:rgba(255,255,255,.75);">*Destination is under wraps for now — expect it to be vibey and completely on-brand. Details drop soon.</p>
+      <p style="margin-top:16px; font-size:12px; color:rgba(255,255,255,.75);">*Destination is under wraps for now. Expect it to be vibey and completely on-brand. Details drop soon.</p>
     </div>
   </div>
 </section>
@@ -472,7 +503,7 @@
         <div class="form-msg" id="joinMsg"></div>
       </form>
       <div id="referralBox" style="display:none; margin-top:20px; padding:16px; background:var(--bg-soft); border-radius:14px;">
-        <div class="ledger-label" style="margin-bottom:8px;">Your referral link — worth +10 pts per friend who joins</div>
+        <div class="ledger-label" style="margin-bottom:8px;">Your referral link (worth +10 pts per friend who joins)</div>
         <div class="pin-row">
           <input id="referralLinkInput" readonly style="font-size:13px;">
           <button class="btn btn-ghost" id="copyReferralBtn" type="button">Copy</button>
@@ -487,7 +518,7 @@
     <div class="section-head">
       <div class="num-tag">Step 03</div>
       <h2>Log a win</h2>
-      <p class="section-sub">Already joined? Log a business win — big or small — and it'll show up in the feed.</p>
+      <p class="section-sub">Already joined? Log a business win, big or small, and it'll show up in the feed.</p>
     </div>
     <div class="grid-2">
       <div class="card">
@@ -497,8 +528,8 @@
           <label for="wCategory">What is this?</label>
           <select id="wCategory">
             <option value="business_win">A business win</option>
-            <option value="shared_story">I shared my story (tagged @marleyroseharris and @innersource.app) — +10</option>
-            <option value="posted_content">I posted my own content about the challenge — +15</option>
+            <option value="shared_story">I shared my story (tagged @marleyroseharris and @innersource.app) · +10</option>
+            <option value="posted_content">I posted my own content about the challenge · +15</option>
             <option value="other">Something else</option>
           </select>
           <label for="wText">Tell us about it</label>
@@ -545,11 +576,42 @@
   <div class="wrap">
     <div class="section-head">
       <div class="num-tag">The Ledger</div>
-      <h2>Top 5 most engaged</h2>
-      <p class="section-sub">Ranked by engagement points. The top 5 hold seats for the retreat.</p>
+      <h2>The Ledger</h2>
+      <p class="section-sub">Ranked by engagement points. The top 5 hold seats for the retreat, and #1 takes the $20,000.</p>
     </div>
     <div class="card">
       <div id="leaderboard"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="follow">
+  <div class="wrap">
+    <div class="section-head" style="text-align:center;">
+      <div class="num-tag">Follow along</div>
+      <h2>Make sure you follow along to get the strategy.</h2>
+    </div>
+    <div class="social-links">
+      <a class="social-link" href="https://www.instagram.com/marleyroseharris/" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Instagram · @marleyroseharris
+      </a>
+      <a class="social-link" href="https://www.instagram.com/higherself.app/" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Innersource on Instagram
+      </a>
+      <a class="social-link" href="https://www.youtube.com/@marleyroseharris" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>
+        YouTube
+      </a>
+      <a class="social-link" href="https://podcasts.apple.com/us/podcast/money-mindset-manifestation/id1500278483" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Podcast on Apple
+      </a>
+      <a class="social-link" href="https://open.spotify.com/show/0Z6wVzNja0m3X5Gdkrnczx?si=ab571656f9f84943" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Podcast on Spotify
+      </a>
     </div>
   </div>
 </section>
@@ -622,9 +684,9 @@ function render(data){
   const ranked = data.participants || [];
   const lbEl = document.getElementById('leaderboard');
   if(ranked.length === 0){
-    lbEl.innerHTML = '<div class="empty">No one on the ledger yet — join above to be first.</div>';
+    lbEl.innerHTML = '<div class="empty">No one on the ledger yet. Join above to be first.</div>';
   } else {
-    lbEl.innerHTML = ranked.slice(0,5).map((p,i) => `
+    lbEl.innerHTML = ranked.slice(0,50).map((p,i) => `
       <div class="row">
         <div class="rank ${i<5?'top':''}">${String(i+1).padStart(2,'0')}</div>
         <div class="who">
@@ -640,7 +702,7 @@ function render(data){
   const feedEl = document.getElementById('winsFeed');
   const recentWins = data.wins || [];
   if(recentWins.length === 0){
-    feedEl.innerHTML = '<div class="empty">No wins logged yet — be the first.</div>';
+    feedEl.innerHTML = '<div class="empty">No wins logged yet. Be the first.</div>';
   } else {
     feedEl.innerHTML = recentWins.map(w => `
       <div class="win-item">
@@ -737,7 +799,7 @@ document.getElementById('winForm').addEventListener('submit', async (e) => {
     const result = await res.json();
     if(!res.ok){
       msg.textContent = result.error === 'not-found'
-        ? "That email isn't on the ledger yet — join the challenge first."
+        ? "That email isn't on the ledger yet. Join the challenge first."
         : "Something went wrong. Try again.";
       msg.className = 'form-msg err';
     } else {
@@ -769,7 +831,7 @@ document.getElementById('incomeForm').addEventListener('submit', async (e) => {
     });
     const result = await res.json();
     if(!res.ok){
-      msg.textContent = result.error === 'not-found' ? "That email isn't on the ledger yet — join the challenge first."
+      msg.textContent = result.error === 'not-found' ? "That email isn't on the ledger yet. Join the challenge first."
         : result.error === 'already-submitted' ? "You've already logged income for this month."
         : "Something went wrong. Try again.";
       msg.className = 'form-msg err';
