@@ -412,6 +412,13 @@
         </div>
         <div class="form-msg" id="joinMsg"></div>
       </form>
+      <div id="referralBox" style="display:none; margin-top:20px; padding:16px; background:var(--bg-soft); border-radius:14px;">
+        <div class="ledger-label" style="margin-bottom:8px;">Your referral link — worth +10 pts per friend who joins</div>
+        <div class="pin-row">
+          <input id="referralLinkInput" readonly style="font-size:13px;">
+          <button class="btn btn-ghost" id="copyReferralBtn" type="button">Copy</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -600,6 +607,9 @@ function categoryTagClass(cat){
   return (cat === 'shared_story' || cat === 'posted_content') ? 'seat-badge' : '';
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const incomingRefCode = urlParams.get('ref');
+
 document.getElementById('joinForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('jName').value.trim();
@@ -613,7 +623,7 @@ document.getElementById('joinForm').addEventListener('submit', async (e) => {
     const res = await fetch('/api/join', {
       method: 'POST',
       headers: {'content-type':'application/json'},
-      body: JSON.stringify({name, email, social})
+      body: JSON.stringify({name, email, social, ref: incomingRefCode})
     });
     const result = await res.json();
     if(!res.ok){
@@ -625,6 +635,11 @@ document.getElementById('joinForm').addEventListener('submit', async (e) => {
       msg.textContent = "You're in. Start engaging to climb the ledger.";
       msg.className = 'form-msg ok';
       e.target.reset();
+      if(result.referralCode){
+        const link = `${window.location.origin}${window.location.pathname}?ref=${result.referralCode}`;
+        document.getElementById('referralLinkInput').value = link;
+        document.getElementById('referralBox').style.display = 'block';
+      }
       loadData();
     }
   }catch(err){
@@ -632,6 +647,17 @@ document.getElementById('joinForm').addEventListener('submit', async (e) => {
     msg.className = 'form-msg err';
   }
   btn.disabled = false;
+});
+
+document.getElementById('copyReferralBtn').addEventListener('click', () => {
+  const input = document.getElementById('referralLinkInput');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(() => {
+    const btn = document.getElementById('copyReferralBtn');
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }).catch(() => {});
 });
 
 document.getElementById('winForm').addEventListener('submit', async (e) => {
