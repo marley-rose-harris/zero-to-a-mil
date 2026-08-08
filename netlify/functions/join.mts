@@ -40,7 +40,7 @@ async function checkMembership(email: string): Promise<boolean> {
 
 // Notifies a Zapier "Catch Hook" trigger of a new signup, e.g. to add them
 // to a Flodesk list. Fire-and-forget — never blocks or fails the signup.
-async function notifySignupWebhook(payload: { name: string; email: string; social: string }) {
+async function notifySignupWebhook(payload: { name: string; email: string; social: string; referralLink: string }) {
   const webhookUrl = Netlify.env.get("SIGNUP_WEBHOOK_URL");
   if (!webhookUrl) return;
 
@@ -117,7 +117,10 @@ export default async (req: Request, context: Context) => {
     await db.sql`UPDATE participants SET points = points + ${REFERRAL_BONUS_POINTS} WHERE id = ${referrerId}`;
   }
 
-  await notifySignupWebhook({ name, email, social });
+  const siteUrl = Netlify.env.get("SITE_URL") || new URL(req.url).origin;
+  const referralLink = `${siteUrl}/?ref=${newParticipant.referral_code}`;
+
+  await notifySignupWebhook({ name, email, social, referralLink });
 
   return new Response(
     JSON.stringify({ ok: true, isMember, referralCode: newParticipant.referral_code }),
