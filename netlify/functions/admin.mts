@@ -98,6 +98,34 @@ export default async (req: Request, context: Context) => {
     });
   }
 
+  if (body.action === "list-participants") {
+    const rows = await db.sql`
+      SELECT
+        p.id, p.name, p.email, p.social, p.points, p.referral_code,
+        p.is_member, p.current_streak, p.joined_at,
+        ref.name AS referred_by_name
+      FROM participants p
+      LEFT JOIN participants ref ON p.referred_by = ref.id
+      ORDER BY p.points DESC, p.joined_at ASC
+    `;
+    return new Response(JSON.stringify({ ok: true, participants: rows }), {
+      headers: { "content-type": "application/json" },
+    });
+  }
+
+  if (body.action === "list-wins") {
+    const rows = await db.sql`
+      SELECT w.id, w.text, w.category, w.created_at, p.name, p.email
+      FROM wins w
+      JOIN participants p ON w.participant_id = p.id
+      ORDER BY w.created_at DESC
+      LIMIT 300
+    `;
+    return new Response(JSON.stringify({ ok: true, wins: rows }), {
+      headers: { "content-type": "application/json" },
+    });
+  }
+
   return new Response(JSON.stringify({ error: "unknown-action" }), {
     status: 400,
     headers: { "content-type": "application/json" },

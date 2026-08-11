@@ -510,6 +510,22 @@
         </div>
       </div>
     </div>
+
+    <div class="card" style="margin-top:16px;">
+      <label for="lookupEmail" style="margin-top:0;">Already joined? Find your referral link</label>
+      <div class="pin-row">
+        <input id="lookupEmail" type="email" placeholder="you@email.com">
+        <button class="btn btn-ghost" id="lookupBtn" type="button">Find it</button>
+      </div>
+      <div id="lookupResultBox" style="display:none; margin-top:16px; padding:16px; background:var(--bg-soft); border-radius:14px;">
+        <div class="ledger-label" style="margin-bottom:8px;">Your referral link</div>
+        <div class="pin-row">
+          <input id="lookupLinkInput" readonly style="font-size:13px;">
+          <button class="btn btn-ghost" id="copyLookupBtn" type="button">Copy</button>
+        </div>
+      </div>
+      <div class="form-msg" id="lookupMsg"></div>
+    </div>
   </div>
 </section>
 
@@ -641,6 +657,14 @@
         <label style="margin-top:24px;">Private income reports</label>
         <button class="btn btn-ghost" id="viewIncomeBtn" type="button">Load income reports</button>
         <div id="incomeReports" style="margin-top:14px;"></div>
+
+        <label style="margin-top:24px;">All participants (with referral codes)</label>
+        <button class="btn btn-ghost" id="viewParticipantsBtn" type="button">Load all participants</button>
+        <div id="participantsList" style="margin-top:14px; max-height:400px; overflow-y:auto;"></div>
+
+        <label style="margin-top:24px;">All logged wins</label>
+        <button class="btn btn-ghost" id="viewWinsBtn" type="button">Load all wins</button>
+        <div id="allWinsList" style="margin-top:14px; max-height:400px; overflow-y:auto;"></div>
       </div>
     </div>
   </div>
@@ -775,6 +799,54 @@ document.getElementById('copyReferralBtn').addEventListener('click', () => {
   input.select();
   navigator.clipboard.writeText(input.value).then(() => {
     const btn = document.getElementById('copyReferralBtn');
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }).catch(() => {});
+});
+
+document.getElementById('lookupBtn').addEventListener('click', async () => {
+  const email = document.getElementById('lookupEmail').value.trim();
+  const msg = document.getElementById('lookupMsg');
+  const resultBox = document.getElementById('lookupResultBox');
+  resultBox.style.display = 'none';
+  msg.textContent = '';
+
+  if(!email){
+    msg.textContent = 'Enter your email first.';
+    msg.className = 'form-msg err';
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/referral-lookup', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({email})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      msg.textContent = result.error === 'not-found'
+        ? "That email isn't on the ledger yet. Join the challenge first."
+        : "Something went wrong. Try again.";
+      msg.className = 'form-msg err';
+      return;
+    }
+    const link = `${window.location.origin}${window.location.pathname}?ref=${result.referralCode}`;
+    document.getElementById('lookupLinkInput').value = link;
+    resultBox.style.display = 'block';
+    msg.textContent = '';
+  }catch(err){
+    msg.textContent = 'Network error. Try again.';
+    msg.className = 'form-msg err';
+  }
+});
+
+document.getElementById('copyLookupBtn').addEventListener('click', () => {
+  const input = document.getElementById('lookupLinkInput');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(() => {
+    const btn = document.getElementById('copyLookupBtn');
     const original = btn.textContent;
     btn.textContent = 'Copied!';
     setTimeout(() => { btn.textContent = original; }, 1500);
@@ -927,6 +999,68 @@ document.getElementById('viewIncomeBtn').addEventListener('click', async () => {
       <div class="win-item">
         <div class="win-top"><span>${r.name} (${r.email})</span><span>${r.month_key}</span></div>
         <div class="win-text">$${Number(r.amount).toLocaleString('en-US')}</div>
+      </div>
+    `).join('');
+  }catch(err){
+    container.innerHTML = '<div class="form-msg err">Network error.</div>';
+  }
+});
+
+document.getElementById('viewParticipantsBtn').addEventListener('click', async () => {
+  const container = document.getElementById('participantsList');
+  container.innerHTML = '<div class="empty">Loading…</div>';
+  try{
+    const res = await fetch('/api/admin', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({pin: adminPin, action:'list-participants'})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      container.innerHTML = `<div class="form-msg err">${result.error === 'unauthorized' ? 'Wrong PIN.' : 'Something went wrong.'}</div>`;
+      return;
+    }
+    if(result.participants.length === 0){
+      container.innerHTML = '<div class="empty">No participants yet.</div>';
+      return;
+    }
+    container.innerHTML = result.participants.map(p => `
+      <div class="win-item">
+        <div class="win-top"><span>${esc(p.name)} (${esc(p.email)})</span><span>${p.points} pts</span></div>
+        <div class="win-text">
+          ${esc(p.social)} &middot; code: <strong>${p.referral_code || '—'}</strong>
+          ${p.referred_by_name ? ` &middot; referred by ${esc(p.referred_by_name)}` : ''}
+          ${p.is_member ? ' &middot; member' : ''}
+          ${p.current_streak ? ` &middot; streak: ${p.current_streak}` : ''}
+        </div>
+      </div>
+    `).join('');
+  }catch(err){
+    container.innerHTML = '<div class="form-msg err">Network error.</div>';
+  }
+});
+
+document.getElementById('viewWinsBtn').addEventListener('click', async () => {
+  const container = document.getElementById('allWinsList');
+  container.innerHTML = '<div class="empty">Loading…</div>';
+  try{
+    const res = await fetch('/api/admin', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({pin: adminPin, action:'list-wins'})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      container.innerHTML = `<div class="form-msg err">${result.error === 'unauthorized' ? 'Wrong PIN.' : 'Something went wrong.'}</div>`;
+      return;
+    }
+    if(result.wins.length === 0){
+      container.innerHTML = '<div class="empty">No wins logged yet.</div>';
+      return;
+    }
+    container.innerHTML = result.wins.map(w => `
+      <div class="win-item">
+        <div class="win-top"><span>${esc(w.name)} (${esc(w.email)})</span><span>${timeAgo(w.created_at)}</span></div>
+        ${w.category && w.category !== 'business_win' ? `<div class="${categoryTagClass(w.category)}" style="margin-top:4px; margin-bottom:4px;">${categoryLabel(w.category)}</div>` : ''}
+        <div class="win-text">${esc(w.text)}</div>
       </div>
     `).join('');
   }catch(err){
