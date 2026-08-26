@@ -595,6 +595,17 @@
       <h2>The Ledger</h2>
       <p class="section-sub">Ranked by engagement points. The top 5 hold seats for the retreat, and #1 takes the $20,000.</p>
     </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <label for="rankEmail" style="margin-top:0;">Don't see yourself below? Find your exact rank</label>
+      <div class="pin-row">
+        <input id="rankEmail" type="email" placeholder="you@email.com">
+        <button class="btn btn-ghost" id="rankBtn" type="button">Find my rank</button>
+      </div>
+      <div id="rankResultBox" style="display:none; margin-top:16px; padding:16px; background:var(--bg-soft); border-radius:14px;"></div>
+      <div class="form-msg" id="rankMsg"></div>
+    </div>
+
     <div class="card">
       <div id="leaderboard"><div class="empty">Loading…</div></div>
     </div>
@@ -851,6 +862,51 @@ document.getElementById('copyLookupBtn').addEventListener('click', () => {
     btn.textContent = 'Copied!';
     setTimeout(() => { btn.textContent = original; }, 1500);
   }).catch(() => {});
+});
+
+document.getElementById('rankBtn').addEventListener('click', async () => {
+  const email = document.getElementById('rankEmail').value.trim();
+  const msg = document.getElementById('rankMsg');
+  const box = document.getElementById('rankResultBox');
+  box.style.display = 'none';
+  msg.textContent = '';
+
+  if(!email){
+    msg.textContent = 'Enter your email first.';
+    msg.className = 'form-msg err';
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/rank-lookup', {
+      method: 'POST',
+      headers: {'content-type':'application/json'},
+      body: JSON.stringify({email})
+    });
+    const result = await res.json();
+    if(!res.ok){
+      msg.textContent = result.error === 'not-found'
+        ? "That email isn't on the ledger yet. Join the challenge first."
+        : "Something went wrong. Try again.";
+      msg.className = 'form-msg err';
+      return;
+    }
+    let note = '';
+    if(result.isNumberOne) note = "You're #1. The $20,000 is yours right now.";
+    else if(result.seatsRetreat) note = "You're holding a retreat seat right now.";
+    else note = `${5 - result.rank > 0 ? 5 - result.rank : 'A few'} spot${result.rank === 4 ? '' : 's'} away from a retreat seat.`;
+
+    box.innerHTML = `
+      <div class="ledger-label" style="margin-bottom:6px;">Your rank</div>
+      <div class="ledger-count" style="font-size:32px; margin:0 0 4px;">#${result.rank}<span style="font-size:18px; color:var(--ink-dim);"> of ${result.total}</span></div>
+      <div class="ledger-sub">${result.points} points &middot; ${note}</div>
+    `;
+    box.style.display = 'block';
+    msg.textContent = '';
+  }catch(err){
+    msg.textContent = 'Network error. Try again.';
+    msg.className = 'form-msg err';
+  }
 });
 
 document.getElementById('winForm').addEventListener('submit', async (e) => {
