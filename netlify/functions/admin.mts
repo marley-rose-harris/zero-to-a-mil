@@ -85,6 +85,28 @@ export default async (req: Request, context: Context) => {
     });
   }
 
+  if (body.action === "update-handle") {
+    const email = body.email?.trim();
+    const handle = body.handle?.trim();
+    if (!email || !handle) {
+      return new Response(JSON.stringify({ error: "invalid" }), {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    const rows = await db.sql`SELECT id FROM participants WHERE email = ${email}`;
+    if (rows.length === 0) {
+      return new Response(JSON.stringify({ error: "not-found" }), {
+        status: 404,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    await db.sql`UPDATE participants SET social = ${handle} WHERE id = ${rows[0].id}`;
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { "content-type": "application/json" },
+    });
+  }
+
   if (body.action === "list-income") {
     const rows = await db.sql`
       SELECT p.name, p.email, ir.month_key, ir.amount, ir.submitted_at

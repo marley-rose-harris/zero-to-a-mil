@@ -665,6 +665,14 @@
         </div>
         <div class="form-msg" id="adminMsg"></div>
 
+        <label for="handleEmail" style="margin-top:24px;">Update Instagram handle</label>
+        <input id="handleEmail" type="email" placeholder="participant email">
+        <div class="pin-row" style="margin-top:10px;">
+          <input id="handleNew" type="text" placeholder="new @handle">
+          <button class="btn btn-ghost" id="handleSubmit">Update handle</button>
+        </div>
+        <div class="form-msg" id="handleMsg"></div>
+
         <label style="margin-top:24px;">Private income reports</label>
         <button class="btn btn-ghost" id="viewIncomeBtn" type="button">Load income reports</button>
         <div id="incomeReports" style="margin-top:14px;"></div>
@@ -1031,6 +1039,34 @@ document.getElementById('engSubmit').addEventListener('click', async () => {
   adminMsg.className = 'form-msg ok';
   document.getElementById('engEmail').value = '';
   document.getElementById('engPoints').value = '';
+  loadData();
+});
+
+document.getElementById('handleSubmit').addEventListener('click', async () => {
+  const email = document.getElementById('handleEmail').value.trim();
+  const handle = document.getElementById('handleNew').value.trim();
+  const msg = document.getElementById('handleMsg');
+  if(!email || !handle){
+    msg.textContent = 'Enter the participant email and the new handle.';
+    msg.className = 'form-msg err';
+    return;
+  }
+  const res = await fetch('/api/admin', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body: JSON.stringify({pin: adminPin, action:'update-handle', email, handle})
+  });
+  const result = await res.json();
+  if(!res.ok){
+    msg.textContent = result.error === 'unauthorized' ? 'Wrong PIN.'
+      : result.error === 'not-found' ? 'No participant with that email.'
+      : 'Something went wrong.';
+    msg.className = 'form-msg err';
+    return;
+  }
+  msg.textContent = 'Handle updated to ' + handle + '.';
+  msg.className = 'form-msg ok';
+  document.getElementById('handleEmail').value = '';
+  document.getElementById('handleNew').value = '';
   loadData();
 });
 
